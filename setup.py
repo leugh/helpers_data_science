@@ -4,8 +4,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="helpers_data_science_blp", # Replace with your own username
-    version="0.0.1",
+    name="blp_helpers_data_science", # Replace with your own username
+    version="0.0.2",
     author="Leopold Bosankic",
     author_email="leopold.bosankic@outlook.com",
     description="Helpers I use for Data Science projects",
