@@ -4,3 +4,9 @@
 # Version: 0.0.4
 * Added function to search newsapi using sources
 * Applied small formatting changes to code
+
+# Version: 0.0.5
+* Added get_data_using_catalog
+
+# Version: 0.0.6
+* Moved get_data_using_catalog into own file
