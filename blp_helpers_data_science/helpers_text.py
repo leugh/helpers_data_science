@@ -3,6 +3,7 @@ import re
 import string
 import codecs
 from collections import Counter
+import spacy
 
 
 def worthaeufigkeiten_berechnen(text):
@@ -91,3 +92,78 @@ def replace_special_characters(text, substitutionsstring=' '):
     filtered_tokens = filter(None, [pattern.sub(substitutionsstring, token) for token in tokens])
     filtered_text = ' '.join(filtered_tokens)
     return filtered_text
+
+
+def stem_words(text):
+    nlp = spacy.load('de_core_news_sm', disable = ['ner', 'parser'])
+    nlp.max_length = 2000000
+    spacy_doc = nlp(text)
+    stemmed_tokens = [token.lemma_ for token in spacy_doc]
+    stemmed_text = ' '.join(stemmed_tokens)
+    return stemmed_text
+
+
+def keep_text_characters(text):
+    filtered_tokens = []
+    tokens = tokenize_text(text)
+    for token in tokens:
+        if re.search('[a-zA-Z]', token):
+            filtered_tokens.append(token)
+    filtered_text = ' '.join(filtered_tokens)
+    return filtered_text
+
+
+def remove_digits_from_text(text):
+    # make this '49die' into this 'die'
+    pattern = '[0-9]'
+    tokens_original = tokenize_text(text)
+    tokens = [re.sub(pattern, '', token) for token in tokens_original]
+    text = ' '.join(tokens)
+    return text
+
+
+def remove_links(text):
+    text = re.sub(r'http\S+', '', text)
+    return text
+
+
+def normalize_text(text, tokenize=True, only_text_chars=True, filter_stopwords=True,
+                   custom_stopwords_file_name=''
+                   , word_stemming=True
+                   , rm_special_char=True
+                   , rm_links=True
+                   , rm_digits_from_text=True
+                   ):
+    """
+
+    :type rm_links: bool
+    :param rm_digits_from_text: bool
+    :type rm_special_char: bool
+    :param text:
+    :param tokenize:
+    :param only_text_chars:
+    :param filter_stopwords:
+    :param custom_stopwords_file_name:
+    :param word_stemming:
+    :return: Die Tokens des Textes, getrennt durch Abstand (' ')
+    """
+    # Lowercase all words
+    text = text.lower()
+    if word_stemming:
+        text = stem_words(text)
+    if rm_special_char:
+        text = replace_special_characters(text)
+    if only_text_chars:
+        text = keep_text_characters(text)
+    if filter_stopwords:
+        text = remove_stopwords(text, custom_stopwords_file_name)
+    else:
+        pass
+    if rm_digits_from_text:
+        text = remove_digits_from_text(text)
+    if rm_links:
+        text = remove_links(text)
+    if tokenize:
+        text = tokenize_text(text)
+
+    return text

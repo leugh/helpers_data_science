@@ -20,7 +20,6 @@ def get_data_using_catalog(dataset_name, config_version, azure_storage_connectio
         Which conf-folder to use, according to kedro it can be local or base
     azure_storage_connection_string : str
         Connection string for Azure Data Lake (see Azure Doc. for more info)
-
     Returns
     -------
     A pandas dataframe
