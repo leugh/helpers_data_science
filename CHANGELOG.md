@@ -10,3 +10,6 @@
 
 # Version: 0.0.6
 * Moved get_data_using_catalog into own file
+
+# Version: 1
+* Added functions for normalization pipeline
