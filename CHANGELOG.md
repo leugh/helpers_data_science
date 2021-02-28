@@ -13,3 +13,6 @@
 
 # Version: 1
 * Added functions for normalization pipeline
+
+# Version: 1.1
+* Params for stemming and removing stopwords

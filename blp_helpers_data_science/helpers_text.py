@@ -17,10 +17,12 @@ def worthaeufigkeiten_berechnen(text):
     return haeufigkeiten_dict, haeufigkeiten_list_sorted
 
 
-def remove_stopwords(text, custom_stopwords_file='industry_classifier_custom_stopword_list'
+def remove_stopwords(text
+                     , custom_stopwords_file='industry_classifier_custom_stopword_list'
                      , default_stopwords_language='german'):
     """
 
+    :param default_stopwords_language:
     :param text:
     :param custom_stopwords_file: string, optional
         Voller Pfad zu einer benutzerdefinierten Datei mit Stoppwörtern.
@@ -94,8 +96,8 @@ def replace_special_characters(text, substitutionsstring=' '):
     return filtered_text
 
 
-def stem_words(text):
-    nlp = spacy.load('de_core_news_sm', disable = ['ner', 'parser'])
+def stem_words(text, model_name='de_core_news_sm'):
+    nlp = spacy.load(model_name, disable=['ner', 'parser'])
     nlp.max_length = 2000000
     spacy_doc = nlp(text)
     stemmed_tokens = [token.lemma_ for token in spacy_doc]
@@ -127,15 +129,22 @@ def remove_links(text):
     return text
 
 
-def normalize_text(text, tokenize=True, only_text_chars=True, filter_stopwords=True,
-                   custom_stopwords_file_name=''
-                   , word_stemming=True
-                   , rm_special_char=True
-                   , rm_links=True
-                   , rm_digits_from_text=True
+def normalize_text(text
+                    , tokenize=True
+                    , only_text_chars=True
+                    , filter_stopwords=True
+                    , custom_stopwords_file_name=''
+                    , word_stemming=True
+                    , rm_special_char=True
+                    , rm_links=True
+                    , rm_digits_from_text=True
+                    , spacy_model_name='de_core_news_sm'
+                    , default_stopwords_language='german'
                    ):
     """
 
+    :param default_stopwords_language:
+    :param spacy_model_name:
     :type rm_links: bool
     :param rm_digits_from_text: bool
     :type rm_special_char: bool
@@ -150,13 +159,13 @@ def normalize_text(text, tokenize=True, only_text_chars=True, filter_stopwords=T
     # Lowercase all words
     text = text.lower()
     if word_stemming:
-        text = stem_words(text)
+        text = stem_words(text, spacy_model_name)
     if rm_special_char:
         text = replace_special_characters(text)
     if only_text_chars:
         text = keep_text_characters(text)
     if filter_stopwords:
-        text = remove_stopwords(text, custom_stopwords_file_name)
+        text = remove_stopwords(text, custom_stopwords_file_name, default_stopwords_language)
     else:
         pass
     if rm_digits_from_text:
