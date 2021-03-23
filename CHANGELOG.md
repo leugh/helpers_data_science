@@ -16,3 +16,21 @@
 
 # Version: 1.1
 * Params for stemming and removing stopwords
+
+# Version: 2
+* Helpers for Azure
+
+# Version: 2.1
+* Changed file name of Helpers for Azure and added more comments there
+
+# Version: 2.2
+* Improved get_entities_for_category
+
+# Version: 2.3
+* Added get_value_counts_as_df
+
+# Version: 2.4
+* Put helpers for newsapi from helpers_misc into own file
+
+# Version: 2.5
+* Helps for Azure now support sentiment
