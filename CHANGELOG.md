@@ -34,3 +34,6 @@
 
 # Version: 2.5
 * Helps for Azure now support sentiment
+
+# Version: 2.5.1
+* Fixed issues with src/target-columns in get_sentiment

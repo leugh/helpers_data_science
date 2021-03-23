@@ -61,14 +61,12 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
     def _get_confidence_score_from_dict(response_dict):
         return str(response_dict.get('confidence_scores'))
 
-    def _get_individual_sentiments(data_frame):
+    def _get_individual_sentiments(data_frame, tgt_column_prefix, src_column):
         individual_sentiments = [
             'positive'
             , 'neutral'
             , 'negative'
         ]
-        tgt_column_prefix = 'overall__confidence_score'
-        src_column = 'overall__confidence_scores'
 
         for suffix in individual_sentiments:
             data_frame[tgt_column_prefix + '_' + suffix] = data_frame.apply(
@@ -110,7 +108,16 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
                 sentence)
             sentiment_sentences_all_docs.loc[df_idx, 'sentence__overall__id'] = overall__id
 
-    sentiment_overall_all_docs = _get_individual_sentiments(sentiment_overall_all_docs)
-    sentiment_sentences_all_docs = _get_individual_sentiments(sentiment_sentences_all_docs)
+    sentiment_overall_all_docs = _get_individual_sentiments(
+        sentiment_overall_all_docs
+        , 'overall__confidence_score'
+        , 'overall__confidence_scores'
+
+    )
+    sentiment_sentences_all_docs = _get_individual_sentiments(
+        sentiment_sentences_all_docs
+        , 'sentence__confidence_score'
+        , 'sentence__confidence_scores'
+    )
 
     return sentiment_overall_all_docs, sentiment_sentences_all_docs
