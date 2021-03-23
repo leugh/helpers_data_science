@@ -58,8 +58,6 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
     pandas data frames for the overall doc and each sentence in each doc
 
     """
-    def _get_confidence_score_from_dict(response_dict):
-        return str(response_dict.get('confidence_scores'))
 
     def _get_individual_sentiments(data_frame, tgt_column_prefix, src_column):
         individual_sentiments = [
@@ -84,15 +82,31 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
 
     sentiment_sentences_all_docs = pd.DataFrame()
     sentiment_overall_all_docs = pd.DataFrame()
+    overall_response_keys = [
+        'sentiment'
+        , 'confidence_scores'
+    ]
+    sentence_response_keys = [
+        'text'
+        , 'sentiment'
+        , 'confidence_scores'
+    ]
+
+    def _extract_from_response(df, df_index, response_keys, column_prefix, response_dict):
+        for response_key in response_keys:
+            df.loc[df_index, column_prefix + '__' + response_key] = str(
+                response_dict.get(response_key))
+        return df
 
     for doc_idx, response in enumerate(response_set):
         df_idx = sentiment_overall_all_docs.shape[0]
         overall__id = response.get('id')
 
-        sentiment_overall_all_docs.loc[df_idx, 'overall__sentiment'] = response.get('sentiment')
-        sentiment_overall_all_docs.loc[df_idx, 'overall__id'] = overall__id
+        sentiment_overall_all_docs = _extract_from_response(
+            sentiment_overall_all_docs, df_idx, overall_response_keys, 'overall', response
+        )
         sentiment_overall_all_docs.loc[df_idx, 'doc_text'] = documents[doc_idx]
-        sentiment_overall_all_docs.loc[df_idx, 'overall__confidence_scores'] = _get_confidence_score_from_dict(response)
+        sentiment_overall_all_docs.loc[df_idx, 'overall__id'] = overall__id
 
         # do stuff on sentence level
         sentences = response.get('sentences')
@@ -101,18 +115,15 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
 
         for sentence in sentences:
             df_idx = sentiment_sentences_all_docs.shape[0]
-
-            sentiment_sentences_all_docs.loc[df_idx, 'sentence__text'] = sentence.get('text')
-            sentiment_sentences_all_docs.loc[df_idx, 'sentence__sentiment'] = sentence.get('sentiment')
-            sentiment_sentences_all_docs.loc[df_idx, 'sentence__confidence_scores'] = _get_confidence_score_from_dict(
-                sentence)
-            sentiment_sentences_all_docs.loc[df_idx, 'sentence__overall__id'] = overall__id
+            sentiment_sentences_all_docs = _extract_from_response(
+                sentiment_sentences_all_docs, df_idx, sentence_response_keys, 'sentence', sentence
+            )
+        sentiment_sentences_all_docs['overall__id'] = overall__id
 
     sentiment_overall_all_docs = _get_individual_sentiments(
         sentiment_overall_all_docs
         , 'overall__confidence_score'
         , 'overall__confidence_scores'
-
     )
     sentiment_sentences_all_docs = _get_individual_sentiments(
         sentiment_sentences_all_docs

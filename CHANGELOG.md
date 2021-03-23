@@ -37,3 +37,6 @@
 
 # Version: 2.5.1
 * Fixed issues with src/target-columns in get_sentiment
+
+# Version: 2.5.2
+* Improvements in get_sentiment
