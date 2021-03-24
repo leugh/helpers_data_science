@@ -132,3 +132,71 @@ def get_sentiment(client, documents, show_documents_stats=False, documents_langu
     )
 
     return sentiment_overall_all_docs, sentiment_sentences_all_docs
+
+
+def extract_from_response_to_df(
+        original_df
+        , response_keys
+        , column_prefix
+        , response
+        , original_document
+):
+    """Extracts values from the response-dict and writes into a pandas data_frame
+
+    :param original_df: the original pandas data_frame into which to write the new key phrases from response_dict
+    :param response_keys: for which keys to extract the value from the response-dict
+    :param column_prefix: how the data_frame column that contains the value for response_keys should be named
+    :param response: the response-dict from which to extract stuff
+    :param original_document: contains the document from which the key phrases were extracted
+    :return: df where each column is one response_key + the original document
+    """
+    key_phrases = pd.DataFrame(response.get('key_phrases'), columns=[column_prefix + '__key_phrases'])
+
+    """iterate over each key, get the value for this key from the dict and write this value into the data_frame
+    str() as some values are not string and thus can't be inserted into the df
+    """
+    for response_key in response_keys:
+        key_phrases[column_prefix + '__' + response_key] = str(response.get(response_key))
+
+    # set the original doc to the data_frame
+    key_phrases[column_prefix + '__' + 'original_document'] = original_document
+
+    # add the key_phrases to the original df
+    original_df = original_df.append(key_phrases)
+    original_df.reset_index(drop=True, inplace=True)
+    return original_df
+
+
+def get_key_phrases(client, documents, show_documents_stats=False, documents_language='de'):
+    logger = logging.getLogger("azure.core.pipeline.policies.http_logging_policy")
+    logger.setLevel(logging.WARNING)
+
+    try:
+        response_set = client.extract_key_phrases(
+            documents=documents
+            , show_stats=show_documents_stats
+            , language=documents_language
+        )
+
+        key_phrases_documents = pd.DataFrame()
+
+        # each response is for one doc
+        for response_idx, response in enumerate(response_set):
+            if response.is_error:
+                print(response.id, response.error)
+                continue
+
+            response_keys = response.keys()
+            response_keys.remove('key_phrases')
+
+            key_phrases_documents = extract_from_response_to_df(
+                key_phrases_documents
+                , response_keys
+                , 'keywords_response'
+                , response
+                , documents[response_idx]
+            )
+        return key_phrases_documents
+
+    except Exception as err:
+        print("Encountered exception. {}".format(err))

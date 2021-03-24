@@ -40,3 +40,9 @@
 
 # Version: 2.5.2
 * Improvements in get_sentiment
+
+# Version: 2.6
+* Added get_key_phrases
+
+# Version: 2.6.1
+* Fixed issue in get_key_phrases
