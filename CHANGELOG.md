@@ -46,3 +46,12 @@
 
 # Version: 2.6.1
 * Fixed issue in get_key_phrases
+
+# Version: 2.7
+* Added helpers for mongodb
+
+# Version: 2.7.1
+* Using parse_uri for connection to pymongo
+
+# Version: 2.7.2
+* Rm unused stuff in get_mongo_collection

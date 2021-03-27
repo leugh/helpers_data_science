@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="blp_helpers_data_science", # Replace with your own username
-    version="2.6.1",
+    version="2.7.2",
     author="Leopold Bosankic",
     author_email="leopold.bosankic@outlook.com",
     description="Helpers I use for Data Science projects",
