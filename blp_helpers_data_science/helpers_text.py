@@ -22,8 +22,8 @@ def remove_stopwords(text
                      , default_stopwords_language='german'):
     """
 
-    :param default_stopwords_language:
-    :param text:
+    :param default_stopwords_language: define the language based on which the stopwords will be removed
+    :param text: from which text the stopwords should be removed
     :param custom_stopwords_file: string, optional
         Voller Pfad zu einer benutzerdefinierten Datei mit Stoppwörtern.
         Dateiformat muss .csv sein.
@@ -37,7 +37,7 @@ def remove_stopwords(text
         132r1
 
 
-    :return:
+    :return: Cleaned text as string with one space between each token/word
     """
     default_stopwords = set(nltk.corpus.stopwords.words(default_stopwords_language))
     all_stopwords = default_stopwords
@@ -143,13 +143,13 @@ def normalize_text(text
                    ):
     """
 
-    :param default_stopwords_language:
-    :param spacy_model_name:
-    :type rm_links: bool
-    :param rm_digits_from_text: bool
+    :param default_stopwords_language: define the language based on which the text will be normalized
+    :param spacy_model_name: which spacy model should be used if necessary
+    :type rm_links: bool whether links should be fully removed
+    :param rm_digits_from_text: bool whether digits should be fully removed
     :type rm_special_char: bool
-    :param text:
-    :param tokenize:
+    :param text: the text that should be normalized
+    :param tokenize: if the text should be returned as tokens or joined string
     :param only_text_chars:
     :param filter_stopwords:
     :param custom_stopwords_file_name:
