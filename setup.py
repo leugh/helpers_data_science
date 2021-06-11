@@ -11,7 +11,7 @@ setuptools.setup(
     description="Helpers I use for Data Science projects",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://researchly@bitbucket.org/researchly/helpers.git",
+    url="https://github.com/leugh/helpers_data_science",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
