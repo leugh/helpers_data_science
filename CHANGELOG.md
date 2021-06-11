@@ -58,3 +58,6 @@
 
 # Version: 2.7.3
 * collection_name in get_mongo_collection can be passed in
+
+# Version: 2.7.5
+* remove stopwords only returns if len(token) > 1

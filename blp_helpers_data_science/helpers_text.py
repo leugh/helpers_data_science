@@ -48,7 +48,7 @@ def remove_stopwords(text
     else:
         pass
     tokens = tokenize_text(text)
-    filtered_tokens = [token for token in tokens if token not in all_stopwords]
+    filtered_tokens = [token for token in tokens if token not in all_stopwords and len(token) > 1]
     filtered_text = ' '.join(filtered_tokens)
     return filtered_text
 
