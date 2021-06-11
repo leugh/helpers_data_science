@@ -55,3 +55,6 @@
 
 # Version: 2.7.2
 * Rm unused stuff in get_mongo_collection
+
+# Version: 2.7.3
+* collection_name in get_mongo_collection can be passed in

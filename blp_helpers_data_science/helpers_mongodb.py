@@ -5,8 +5,7 @@ import logging
 import os
 
 
-def get_mongo_collection(environment_name):
-
+def get_mongo_collection(environment_name, collection_name=False):
     logger = logging.getLogger(__name__)
 
     env_vars_available = False
@@ -24,7 +23,17 @@ def get_mongo_collection(environment_name):
             , connect_timeout=None
         )
         mongodb_db_name = mongodb_connect_params.get('database')
-        mongodb_collection_name = mongodb_connect_params.get('collection')
+
+        if (mongodb_connect_params.get('collection')) and collection_name:
+            logger.error('collection twice available, once in connection string and once passed in')
+            return mongo_collection
+
+        if mongodb_connect_params.get('collection'):
+            mongodb_collection_name = mongodb_connect_params.get('collection')
+            logger.info("loaded mongodb_collection_name from env")
+        else:
+            mongodb_collection_name = collection_name
+            logger.info("loaded mongodb_collection_name from passed in value")
         env_vars_available = True
         logger.info("env_vars_available available")
     except KeyError as e:
