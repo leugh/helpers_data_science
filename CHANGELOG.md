@@ -61,3 +61,9 @@
 
 # Version: 2.7.5
 * remove stopwords only returns if len(token) > 1
+
+# Version 2.8
+* Added helpers for time series
+
+# Version 2.8.1
+* Added calculation for residuals to get_baseline()
