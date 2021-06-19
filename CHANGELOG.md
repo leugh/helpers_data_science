@@ -67,3 +67,7 @@
 
 # Version 2.8.1
 * Added calculation for residuals to get_baseline()
+
+# Version 2.8.2
+* Can now define whether get_baseline() should drop_nas when getting the lagged values
+

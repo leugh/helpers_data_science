@@ -9,11 +9,10 @@ def get_x_y_values(train, test, x_col, y_col):
 
 
 def get_train_test(data, test_size=0.66, viz=False, sort=False, return_array=False):
-    """data: pandas.DataFrame with one column (feature-column)
+    """data: pandas.DataFrame where columns = features
     sort: whether data should be sorted (relevant as this is Ts)
     Returns train, test as pandas.DataFrame or numpy.ndarray depending on return_array
     """
-    # the input data should only have one column and this column should be the feature-column
 
     assert isinstance(data, pd.DataFrame)
 
@@ -56,6 +55,10 @@ def get_lagged_values(data, calc_col, forecast_days, drop_na=True):
 
     data = dataframe
     Returns a dataframe (reframed_prediction_horizon) where each column is the next value for the previous column
+
+
+    don't drop NAs if I will only use test-set as test-set is not affected by the NAs (if test-set-split starts after
+    train)
 
     Example:
 
@@ -113,7 +116,7 @@ def get_lagged_values(data, calc_col, forecast_days, drop_na=True):
     return reframed_prediction_horizon
 
 
-def get_baseline(data, calc_col, viz=False, test_size=0.66, show_explanation=False):
+def get_baseline(data, calc_col, viz=False, test_size=0.66, show_explanation=False, drop_na=True):
     """Uses persistence_algorithm to calc RMSE to get baseline value for forecasting performance
     data: pandas.DataFrame with calc_col
         calc_col: column that should be predicted
@@ -135,8 +138,7 @@ def get_baseline(data, calc_col, viz=False, test_size=0.66, show_explanation=Fal
     assert isinstance(data, pd.DataFrame)
     data_orig = data.copy()
 
-    # don't drop NAs because I will only use test-set and test-set is not affected by the NAs
-    data_new = get_lagged_values(data_orig, calc_col, 1, drop_na=False)
+    data_new = get_lagged_values(data_orig, calc_col, 1, drop_na=drop_na)
 
     # get test-data
     train_data, test_data = get_train_test(data_new, test_size)
@@ -145,6 +147,13 @@ def get_baseline(data, calc_col, viz=False, test_size=0.66, show_explanation=Fal
     train_x, train_y, test_x, test_y = get_x_y_values(train_data, test_data, calc_col + '+0', calc_col + '+1')
 
     # get predictions using persistence_algorithm
+    """if the train_set has two lag values, then 
+    x = today
+    y = tomorrow
+    
+    by predicting x for y (see rmse below) we assume that what happened in the previous time step will be the same
+    as what will happen in the next time step
+    """
     predictions = test_x
 
     # calc rmse
