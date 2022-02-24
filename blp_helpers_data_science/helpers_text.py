@@ -140,6 +140,7 @@ def normalize_text(text
                     , rm_digits_from_text=True
                     , spacy_model_name='de_core_news_sm'
                     , default_stopwords_language='german'
+                   , substitution_string = ''
                    ):
     """
 
@@ -154,14 +155,15 @@ def normalize_text(text
     :param filter_stopwords:
     :param custom_stopwords_file_name:
     :param word_stemming:
-    :return: Die Tokens des Textes, getrennt durch Abstand (' ')
+    :param substitution_string: used in replace_special_characters to define with what to replace the spec. char.
+    :return: normalized text as token or string depending on tokenize
     """
     # Lowercase all words
     text = text.lower()
     if word_stemming:
         text = stem_words(text, spacy_model_name)
     if rm_special_char:
-        text = replace_special_characters(text)
+        text = replace_special_characters(text, substitution_string)
     if only_text_chars:
         text = keep_text_characters(text)
     if filter_stopwords:

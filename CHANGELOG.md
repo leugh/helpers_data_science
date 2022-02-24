@@ -71,3 +71,5 @@
 # Version 2.8.2
 * Can now define whether get_baseline() should drop_nas when getting the lagged values
 
+# Version 2.8.5
+* replace_special_characters in normalize_text now with substitution_string
