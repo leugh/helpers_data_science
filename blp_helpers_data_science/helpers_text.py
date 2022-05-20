@@ -3,7 +3,6 @@ import re
 import string
 import codecs
 from collections import Counter
-import spacy
 
 
 def worthaeufigkeiten_berechnen(text):
@@ -96,10 +95,8 @@ def replace_special_characters(text, substitutionsstring=' '):
     return filtered_text
 
 
-def stem_words(text, model_name='de_core_news_sm'):
-    nlp = spacy.load(model_name, disable=['ner', 'parser'])
-    nlp.max_length = 2000000
-    spacy_doc = nlp(text)
+def stem_words(text, spacy_model):
+    spacy_doc = spacy_model(text)
     stemmed_tokens = [token.lemma_ for token in spacy_doc]
     stemmed_text = ' '.join(stemmed_tokens)
     return stemmed_text
@@ -138,14 +135,14 @@ def normalize_text(text
                     , rm_special_char=True
                     , rm_links=True
                     , rm_digits_from_text=True
-                    , spacy_model_name='de_core_news_sm'
+                    , spacy_model=False
                     , default_stopwords_language='german'
                    , substitution_string = ''
                    ):
     """
 
     :param default_stopwords_language: define the language based on which the text will be normalized
-    :param spacy_model_name: which spacy model should be used if necessary
+    :param spacy_model: which spacy model should be used if necessary
     :type rm_links: bool whether links should be fully removed
     :param rm_digits_from_text: bool whether digits should be fully removed
     :type rm_special_char: bool
@@ -161,7 +158,7 @@ def normalize_text(text
     # Lowercase all words
     text = text.lower()
     if word_stemming:
-        text = stem_words(text, spacy_model_name)
+        text = stem_words(text, spacy_model)
     if rm_special_char:
         text = replace_special_characters(text, substitution_string)
     if only_text_chars:

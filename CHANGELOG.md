@@ -73,3 +73,12 @@
 
 # Version 2.8.5
 * replace_special_characters in normalize_text now with substitution_string
+
+# Version 2.9.0
+* stem_words in helpers_text.py now getting spacy-model as param (speed reasons)
+
+# Version 2.9.1
+* stem_words in helpers_text.py now getting spacy-model as param (speed reasons)
+
+# Version 2.9.2
+* stem_words in helpers_text.py now getting spacy-model as param (speed reasons)
