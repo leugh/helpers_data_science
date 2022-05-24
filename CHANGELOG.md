@@ -82,3 +82,9 @@
 
 # Version 2.9.2
 * stem_words in helpers_text.py now getting spacy-model as param (speed reasons)
+
+# Version 3
+* New version for get_mongo_db_collection
+
+# Version 3.0.1
+* Split up get_mongo_db_collection (get_db, get_collection, get_client)
