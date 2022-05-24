@@ -1,6 +1,7 @@
 import os
 from pymongo import MongoClient
 import yaml
+import sys
 
 
 def get_mongo_db_client():
@@ -26,3 +27,13 @@ def get_mongo_db_db(path_config_file, environment):
 
 def get_mongo_db_collection(collection_name, path_config_file, environment):
     return get_mongo_db_db(path_config_file, environment)[collection_name]
+
+
+def check_collection_exist(path_db_config_file, environment, collection_to_test):
+    db = get_mongo_db_db(path_db_config_file, environment)
+    available_collections = db.list_collection_names()
+    if collection_to_test not in available_collections:
+        print(f'{collection_to_test} not in available_collections. These are available:')
+        print('\n'.join(available_collections))
+        print('Aborting')
+        sys.exit()

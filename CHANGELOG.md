@@ -88,3 +88,6 @@
 
 # Version 3.0.1
 * Split up get_mongo_db_collection (get_db, get_collection, get_client)
+
+# Version 3.0.2
+* Added check for existing collection
